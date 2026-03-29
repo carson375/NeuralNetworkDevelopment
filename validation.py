@@ -6,6 +6,7 @@ import numpy as np
 import pickle
 import bz2
 import pandas as pd
+import os
 from sklearn.metrics import roc_auc_score
 
 # build parser 
@@ -19,10 +20,10 @@ parser.add_argument("--yts_hat_path",default="yts_hat.csv",help="path to test-la
 # parse input arguments
 args = parser.parse_args()
 model_path = args.model_path
-Xtr_path = args.Xtr_path
-ytr_path = args.ytr_path
-Xts_path = args.Xts_path
-yts_hat_path = args.yts_hat_path
+Xtr_path = os.path.join("data/raw", "Xtr.csv") if args.Xtr_path == "Xtr.csv" else args.Xtr_path
+ytr_path = os.path.join("data/raw", "ytr.csv") if args.ytr_path == "ytr.csv" else args.ytr_path
+Xts_path = os.path.join("data/raw", "Xts.csv") if args.Xts_path == "Xts.csv" else args.Xts_path
+yts_hat_path = os.path.join("results", "yts_hat.csv") if args.yts_hat_path == "yts_hat.csv" else args.yts_hat_path
 if not yts_hat_path.endswith('.csv'): 
     print("Error: Argument of --yts_hat_path must end in .csv")
     quit()
