@@ -5,7 +5,7 @@ import os
 from .model import ConstellationNet
 from .dataset import load_and_preprocess_data, get_dataloaders
 
-def train_model(model, train_loader, val_loader, epochs=10, lr=1e-3, save_dir="models/saved_models"):
+def train_model(model, train_loader, val_loader, epochs=10, lr=1e-3, save_dir="models/saved_models", model_name="constellation_model.pt"):
     """
     Trains the ConstellationNet model using BCE loss and Adam optimizer.
     """
@@ -47,7 +47,7 @@ def train_model(model, train_loader, val_loader, epochs=10, lr=1e-3, save_dir="m
     # Save the final model state
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
-    save_path = os.path.join(save_dir, "constellation_model.pt")
+    save_path = os.path.join(save_dir, model_name)
     torch.save(model.state_dict(), save_path)
     print(f"\nModel training complete. Model saved to {save_path}")
     

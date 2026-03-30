@@ -5,7 +5,7 @@ from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 import os
 
-def load_and_preprocess_data(raw_data_dir="data/raw", processed_data_dir="data/processed", test_size=0.2):
+def load_and_preprocess_data(raw_data_dir="data/raw", test_size=0.2):
     """
     Loads raw CSV data, standardizes it using RobustScaler, 
     and returns PyTorch DataLoaders.

@@ -1,0 +1,16 @@
+{
+    "bigdipper": {
+        "name": "Big Dipper",
+        "num_stars": 7,
+        "draw_mode": "big_dipper_special",
+        "handle_indices": [0, 1, 2, 3],
+        "bowl_indices": [3, 4, 5, 6],
+        "close_bowl": true
+    },
+    "default": {
+        "name": "Unknown Constellation",
+        "num_stars": 10,
+        "draw_mode": "mst",
+        "close_bowl": false
+    }
+}

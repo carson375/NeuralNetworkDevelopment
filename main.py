@@ -6,25 +6,30 @@ from src.dataset import load_and_preprocess_data, get_dataloaders
 from src.train import train_model
 from src.predict import calculate_auc, predict_and_save
 
-def run_pipeline(epochs=10, lr=1e-3, batch_size=10, force_train=False):
+def run_pipeline(epochs=10, lr=1e-3, batch_size=10, force_train=False, data_dir="data/raw"):
     """
     Main orchestration function for the Constellation Classification project.
     """
     # 1. Load and Prepare Data
-    print("--- Loading and Preprocessing Data ---")
-    X_tr, y_tr, X_val, y_val, X_ts, scaler = load_and_preprocess_data()
+    print(f"--- Loading and Preprocessing Data from {data_dir} ---")
+    X_tr, y_tr, X_val, y_val, X_ts, scaler = load_and_preprocess_data(raw_data_dir=data_dir)
     train_loader, val_loader = get_dataloaders(X_tr, y_tr, X_val, y_val, batch_size=batch_size)
     print(f"Loaded {len(X_tr)} training samples, {len(X_val)} validation samples, and {len(X_ts)} test samples.\n")
 
     # 2. Initialize Model
     nin = X_tr.shape[1]
     model = ConstellationNet(nin=nin, nout=1)
-    model_path = "models/saved_models/constellation_model.pt"
+    
+    # Update model path if using synthetic data to avoid overwriting original
+    model_name = "constellation_model.pt"
+    if "bigdipper" in data_dir:
+        model_name = "bigdipper_model.pt"
+    model_path = os.path.join("models/saved_models", model_name)
 
     # 3. Training
     if not os.path.exists(model_path) or force_train:
         print("--- Training Model ---")
-        train_model(model, train_loader, val_loader, epochs=epochs, lr=lr)
+        train_model(model, train_loader, val_loader, epochs=epochs, lr=lr, model_name=model_name)
         print("Training complete.\n")
     else:
         print(f"--- Loading Pre-trained Model from {model_path} ---")
@@ -47,7 +52,8 @@ if __name__ == "__main__":
     parser.add_argument("--lr", type=float, default=1e-3, help="Learning rate")
     parser.add_argument("--batch_size", type=int, default=10, help="Batch size for training")
     parser.add_argument("--train", action="store_true", help="Force model training")
+    parser.add_argument("--data_dir", type=str, default="data/raw", help="Directory for raw data")
 
     args = parser.parse_args()
     
-    run_pipeline(epochs=args.epochs, lr=args.lr, batch_size=args.batch_size, force_train=args.train)
+    run_pipeline(epochs=args.epochs, lr=args.lr, batch_size=args.batch_size, force_train=args.train, data_dir=args.data_dir)
